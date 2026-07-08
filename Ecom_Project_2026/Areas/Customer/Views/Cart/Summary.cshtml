@@ -1,0 +1,184 @@
+﻿@model Ecom_Project_2026.Models.ViewModels.ShoppingCartVM
+@using Microsoft.Extensions.Options
+@inject IOptions<Ecom_Project_2026.Utility.StripeSettings> stripe;
+
+<form method="post">
+    <div class="container my-3">
+        <div class="d-flex justify-content-between align-items-center bg-dark text-light p-3 rounded shadow-sm">
+            <div class="d-flex align-items-center">
+                <span class="cart-icon-wrapper me-2">
+                <i class="fa fa-shopping-cart fa-lg"></i>
+                </span>
+                <h4 class="mb-0 fw-bold">Order Summary</h4>
+            </div>
+
+            <div>
+                <a asp-action="Index"
+                   class="btn btn-warning fw-semibold px-4 py-2 hover-scale">
+                    <i class="fa fa-arrow-left me-2"></i> Back to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="backgroundWhiteBorder">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 pb-4">
+                                <h4 class="text-info mb-3">PickUp Details:</h4>
+                                <div class="mb-2">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" asp-for="@Model.OrderHeader.Name" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control" asp-for="@Model.OrderHeader.PhoneNumber" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>Street Address</label>
+                                    <input type="text" class="form-control" asp-for="@Model.OrderHeader.StreetAddress" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" asp-for="@Model.OrderHeader.City" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>State</label>
+                                    <input type="text" class="form-control" asp-for="@Model.OrderHeader.State" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>Postal Code</label>
+                                    <input type="text" class="form-control" asp-for="@Model.OrderHeader.PostalCode" />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-5 offset-lg-1">
+                                <h4 class="text-info mb-3">Order Summary:</h4>
+                                <ul class="list-group mb-3">
+                                    @foreach (var list in Model.ListCart)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="my-0">@list.Product.Title</h6>
+                                                <small class="text-muted">Qty: @list.Count</small>
+                                            </div>
+                                            <span class="text-muted">₹ @(list.Price* list.Count)</span>
+                                        </li>
+                                    }
+
+                                    <li class="list-group-item d-flex justify-content-between bg-light">
+                                        <small class="text-info">Total (INR)</small>
+                                        <strong class="text-info">₹ @Model.OrderHeader.OrderTotal</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-8 pt-2">
+                            <p class="text-danger small">
+                                Estimate Arrival Date: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            @{
+                                var orderTotalAmount = Model.OrderHeader.OrderTotal * 100;
+                            }
+                            <script src="https://checkout.stripe.com/checkout.js"
+                                    class="stripe-button"
+                                    data-key="@stripe.Value.PublishableKey"
+                                    data-amount="@orderTotalAmount"
+                                    data-name="Book Shopping Project"
+                                    data-description="Get Book For Testing"
+                                    data-locale="auto"
+                                    data-label="Place Order"
+                                    data-allow-remember-me="false"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+                            </script>
+                            <script>
+                                var el = document.getElementsByClassName('stripe-button-el');
+                                if (el.length > 0) el[0].style.display = "none";
+                            </script>
+
+                            <!-- PayPal Button Container -->
+                            <div id="paypal-button-container"></div>
+
+                            <!-- Load PayPal SDK -->
+                            <script src="https://www.paypal.com/sdk/js?client-id=Af-IeUV6RqujPZm8coXFU83Z0Nxu65RLZ2-JK7alKYg3A_Oj9CwcDptFalseVIZBnOf-slG8spxBklxn&currency=INR"></script>
+
+                            <script>
+                                paypal.Buttons({
+                                    createOrder: function(data, actions) {
+                                        return actions.order.create({
+                                            purchase_units: [{
+                                                amount: {
+                                                    value: '@Model.OrderHeader.OrderTotal.ToString("F2")'
+                                                }
+                                            }]
+                                        });
+                                    },
+                                    onApprove: function(data, actions) {
+                                        return actions.order.capture().then(function(details) {
+                                            alert('Transaction completed by ' + details.payer.name.given_name);
+                                            window.location.href = '/Payment/Success?orderId=' + data.orderID;
+                                        });
+                                    },
+                                    onCancel: function (data) {
+                                        window.location.href = '/Payment/Cancel';
+                                    }
+                                }).render('#paypal-button-container');
+                            </script>
+
+                            <button type="submit" value="Place Order" class="btn btn-success form-control fw-bold">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .cart-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #ff6f61, #ffc107, #fd7e14);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        position: relative;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        animation: pulseGlow 2s infinite;
+        transition: transform 0.3s ease;
+    }
+
+        .cart-icon-wrapper i {
+            color: #fff;
+            font-size: 22px;
+        }
+
+        .cart-icon-wrapper:hover {
+            transform: scale(1.15) rotate(10deg);
+        }
+    
+    
+
+    .hover-scale {
+        transition: all 0.3s ease;
+    }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+            background-color: #ffc107;
+            color: #212529;
+            border-color: #ffc107;
+        }
+</style>
+

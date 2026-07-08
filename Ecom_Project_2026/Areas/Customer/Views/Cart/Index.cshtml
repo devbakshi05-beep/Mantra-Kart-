@@ -1,0 +1,134 @@
+﻿@model Ecom_Project_2026.Models.ViewModels.ShoppingCartVM
+
+<form method="post">
+    <div class="container my-3">
+        <div class="d-flex justify-content-between align-items-center bg-dark text-light p-3 rounded shadow-sm">
+            <div class="d-flex align-items-center">
+                <span class="cart-icon-wrapper me-2">
+                    <i class="fa fa-shopping-cart fa-lg"></i>
+                </span>
+                <h4 class="mb-0 fw-bold">Shopping Cart</h4>
+            </div>
+
+            <div>
+                <a asp-action="Index" asp-controller="Home"
+                   class="btn btn-warning fw-semibold px-4 py-2 hover-scale">
+                    <i class="fa fa-arrow-left me-2"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="backgroundWhiteBorder">
+        <div class="">
+            <div class="card container">
+                <div class="card-body">
+                    @foreach (var List in Model.ListCart)
+                    {
+                        <div class="row mb-3">
+                            <div class="d-none d-lg-block col-lg-1 text-center py-2">
+                                <img src="@List.Product.ImageUrl" class="rounded shadow-sm" width="100%" />
+                            </div>
+                            <div class="col-12 text-sm-center col-lg-6 text-lg-left">
+                                <h5 class="fw-bold">@List.Product.Title</h5>
+                                <p><small>@Html.Raw(List.Product.Description)</small></p>
+                            </div>
+                            <div class="col-12 col-lg-5 text-lg-right row">
+                                <div class="col-4 text-md-right pt-2">
+                                    <h6><strong>@List.Price <span class="text-muted">x</span> @List.Count = @(List.Price* List.Count)</strong></h6>
+                                </div>
+                                <div class="col-6 col-sm-4 col-lg-6">
+                                    <a asp-action="minus" asp-route-id="@List.Id" class="btn btn-danger mx-1">
+                                        <i class="fas fa-minus"></i>
+                                    </a>
+                                    <a asp-action="plus" asp-route-id="@List.Id" class="btn btn-primary mx-1">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
+
+                                <div class="col-2 col-sm-4 col-lg-2 text-right">
+                                    <a asp-action="delete" asp-route-id="@List.Id" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 pr-4">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between bg-light">
+                                    <span class="text-info">Total (INR)</span>
+                                    <strong class="text-info">₹ <span id="txtOrderTotal">@Model.OrderHeader.OrderTotal</span></strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="row">
+                        @if (!Model.OrderHeader.ApplicationUser.EmailConfirmed)
+                        {
+                            <div class="col-8 @ViewBag.EmailCSS">
+                                @ViewBag.EmailMessage
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-outline-warning">
+                                    Click here to resend confirmation Email !!!
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-sm-12 col-lg-4 col-md-6 offset-lg-8 offset-md-6">
+                                <a asp-action="summary" class="btn btn-success form-control">Summary</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .cart-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #ff6f61, #ffc107, #fd7e14);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        position: relative;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        animation: pulseGlow 2s infinite;
+        transition: transform 0.3s ease;
+    }
+
+        .cart-icon-wrapper i {
+            color: #fff;
+            font-size: 22px;
+        }
+
+        .cart-icon-wrapper:hover {
+            transform: scale(1.15) rotate(10deg);
+        }
+
+
+
+    .hover-scale {
+        transition: all 0.3s ease;
+    }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+            background-color: #ffc107;
+            color: #212529;
+            border-color: #ffc107;
+        }
+</style>

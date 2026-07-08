@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Ecom_Project_2026.Models.Product>
+<h2>Books</h2>
+
+<!-- Search Options -->
+<div class="mb-3">
+    <label><input type="radio" name="searchBy" value="title" checked /> Search by Title</label>
+    <label class="ml-3"><input type="radio" name="searchBy" value="author" /> Search by Author</label>
+    <label class="ml-3"><input type="radio" name="searchBy" value="all" /> Search All</label>
+    <input type="text" id="searchBox" class="form-control mt-2" placeholder="Type here to search..." />
+</div>
+
+<!-- Sorting Buttons -->
+<div class="mb-3">
+    <button id="sortTitle" class="btn btn-sm btn-info">Sort by Title</button>
+    <button id="sortAuthor" class="btn btn-sm btn-info">Sort by Author</button>
+</div>
+
+<!-- Product Cards -->
+<div class="row" id="productContainer">
+    @foreach (var Product in Model)
+    {
+        <div class="col-lg-3 col-md-6 product-card">
+            <div class="row p-2">
+                <div class="col-12 p-1" style="border:1px solid #008cba; border-radius: 5px;">
+                    <div class="card" style="border:0px;">
+                        <img src="@Product.ImageUrl" style="height:260px;width:260px;" class="card-img-top rounded" />
+                        <div class="pl-1">
+                            <p class="card-title h5"><b class="book-title" style="color:#2c3e50">@Product.Title</b></p>
+                            <p class="card-title text-primary">by <b class="book-author">@Product.Author</b></p>
+                        </div>
+                        <div style="padding-left:5px;">
+                            <p>List Price: <strike><b>₹@Product.ListPrice.ToString("0.00")</b></strike></p>
+                        </div>
+                        <div style="padding-left:5px;">
+                            <p style="color:maroon">As low as: <b>₹@Product.Price100.ToString("0.00")</b></p>
+                        </div>
+                    </div>
+                    <div>
+                        <a asp-action="Details" class="btn btn-primary form-control" asp-route-id="@Product.Id">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Custom Script -->
+<script>
+    $(document).ready(function () {
+        // Search filter
+        function applySearch() {
+            var value = $("#searchBox").val().toLowerCase();
+            var searchBy = $("input[name='searchBy']:checked").val();
+
+            $("#productContainer .product-card").each(function () {
+                var title = $(this).find(".book-title").text().toLowerCase();
+                var author = $(this).find(".book-author").text().toLowerCase();
+                var allText = $(this).text().toLowerCase();
+
+                if (searchBy === "title") {
+                    $(this).toggle(title.indexOf(value) > -1);
+                } else if (searchBy === "author") {
+                    $(this).toggle(author.indexOf(value) > -1);
+                } else {
+                    $(this).toggle(allText.indexOf(value) > -1);
+                }
+            });
+        }
+
+        // Events
+        $("#searchBox, input[name='searchBy']").on("keyup change", applySearch);
+
+        // Sorting
+        $("#sortTitle").click(function () {
+            var cards = $("#productContainer .product-card").sort(function (a, b) {
+                return $(a).find(".book-title").text().localeCompare($(b).find(".book-title").text());
+            });
+            $("#productContainer").html(cards);
+        });
+
+        $("#sortAuthor").click(function () {
+            var cards = $("#productContainer .product-card").sort(function (a, b) {
+                return $(a).find(".book-author").text().localeCompare($(b).find(".book-author").text());
+            });
+            $("#productContainer").html(cards);
+        });
+    });
+</script>

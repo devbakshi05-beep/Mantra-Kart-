@@ -1,0 +1,374 @@
+﻿html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+/* Navbar Styling */
+header .navbar {
+    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    /* ❌ overflow: hidden hatao */
+    overflow: visible;
+    position: relative; /* dropdown absolute positioning ke liye */
+}
+
+
+header .navbar-brand img {
+    max-height: 160px; /* ✅ logo ki max height fix */
+    width: auto; /* ✅ proportion maintain karega */
+    transition: transform 0.3s ease;
+}
+
+    header .navbar-brand img:hover {
+        transform: scale(1.05);
+    }
+
+header .nav-link {
+    color: #f8f9fa !important; /* Light text */
+    font-weight: 500;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+    header .nav-link:hover {
+        color: #ffd700 !important; /* Gold hover */
+    }
+
+/* Dropdown Menu */
+header .dropdown-menu {
+    position: absolute; /* parent ke niche float kare */
+    top: 100%; /* nav-item ke just neeche */
+    left: 0;
+    z-index: 999; /* background ke upar show ho */
+    background-color: rgb(40, 30, 80);
+    border: none;
+}
+
+header .dropdown-item {
+    color: #f8f9fa;
+}
+
+    header .dropdown-item:hover {
+        background-color: rgb(90, 50, 150);
+        color: #ffd700;
+    }
+
+/* Search Bar */
+header .form-control {
+    border-radius: 20px;
+}
+
+header .btn-outline-success {
+    border-radius: 20px;
+    border-color: #ffd700;
+    color: #ffd700;
+}
+
+    header .btn-outline-success:hover {
+        background-color: #ffd700;
+        color: #282828;
+    }
+
+/* Footer Styling */
+footer {
+    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+    color: #fff;
+    padding: 40px 0;
+    position: relative; /* avoid absolute/fixed overlap */
+    z-index: 1;
+}
+
+    footer h5 {
+        color: #ffaf7b; /* Soft orange accent */
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    footer a {
+        color: #fff;
+        transition: color 0.3s ease;
+    }
+
+        footer a:hover {
+            color: #ffd700; /* Gold hover */
+            text-decoration: underline;
+        }
+
+    footer .fab {
+        font-size: 22px;
+        margin-right: 15px;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+        footer .fab:hover {
+            color: #ffd700;
+            transform: scale(1.2);
+        }
+
+    /* Copyright Section */
+    footer .copyright {
+        border-top: 1px solid rgba(255,255,255,0.2);
+        margin-top: 20px;
+        padding-top: 15px;
+        text-align: center;
+        color: #f8f9fa;
+    }
+
+        footer .copyright h2 {
+            color: #ffd700;
+            font-weight: bold;
+        }
+.btn-google {
+    background-color: #db4437;
+    color: white;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+    color: white;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px;
+}
+
+    .btn-google i, .btn-facebook i {
+        font-size: 20px;
+    }
+
+.btn-instagram {
+    background: #E1306C;
+    color: white;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.btn-linkedin {
+    background: #0077B5;
+    color: white;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px;
+}
+
+    .btn-instagram i, .btn-linkedin i {
+        font-size: 20px;
+    }
+.product-card {
+    width: 300px; /* thoda bada width */
+    height: 460px; /* thoda bada height */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+
+    flex-direction: column;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 220px; /* image bhi proportionally bada */
+        object-fit: cover;
+    }
+nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+    nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+        nav a.login {
+            background: linear-gradient(135deg, violet, purple);
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+            nav a.login:hover {
+                background: linear-gradient(135deg, purple, violet);
+            }
+
+        nav a.register {
+            background: linear-gradient(135deg,orange,red );
+            /* Orange base with soft white reflection */
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s ease;
+            border: none /* keeps orange border */
+        }
+
+            nav a.register:hover {
+                background: linear-gradient(135deg,red,orange);
+            }
+
+        nav a.logout {
+            background: linear-gradient(to right, #e53935, #d32f2f);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        nav a.logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        nav a.logout-icon {
+            font-size: 18px;
+        }
+.faq-simple {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/*.faq-header {
+    text-align: center;
+    margin-bottom: 30px;
+    height: 70px;*/ /* ✅ header ki height fix */
+    /*line-height: 70px;*/ /* ✅ text ko vertically center karne ke liye */
+    /*overflow: hidden;*/ /* ✅ logo bada hone par bhi header expand nahi karega */
+/*}*/
+
+
+    .faq-header h1 {
+        font-size: 28px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .faq-header p {
+        color: #666;
+        font-size: 16px;
+    }
+
+.faq-block {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+    .faq-block h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        color: #2196F3; /* Accent color */
+    }
+
+    .faq-block p {
+        margin: 0;
+        font-size: 16px;
+        color: #555;
+    }
+.policy-container, .shipping-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.policy-header, .shipping-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+    .policy-header i, .shipping-header i {
+        font-size: 40px;
+        color: #4CAF50; /* Change to brand accent */
+    }
+
+.policy-card, .step {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+    .policy-card:hover, .step:hover {
+        transform: translateY(-5px);
+    }
+
+.shipping-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.step i {
+    font-size: 30px;
+    color: #2196F3; /* Accent for shipping */
+}
+
+.faq-header {
+    text-align: center;
+    margin-bottom: 30px;
+    height: 70px; /* ✅ fix height */
+    line-height: 70px; /* ✅ text vertical center */
+    overflow: hidden; /* ✅ prevent expansion */
+}
+
+    .faq-header img {
+        max-height: 160px; /* ✅ logo ki max height */
+        width: auto;
+        vertical-align: middle;
+    }
+
+
