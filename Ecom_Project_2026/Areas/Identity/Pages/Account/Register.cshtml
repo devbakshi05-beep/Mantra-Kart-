@@ -40,12 +40,23 @@
             </div>
             <div class="form-floating mb-3">
                 <label asp-for="Input.PhoneNumber">PhoneNumber</label>
-                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your Phone Number" />
+                <input asp-for="Input.PhoneNumber"
+                       class="form-control"
+                       autocomplete="new-password"
+                       aria-required="true"
+                       placeholder="Enter Your Phone Number"
+                       inputmode="numeric"
+                       maxlength="10"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <label asp-for="Input.PostalCode">PostalCode</label>
-                <input asp-for="Input.PostalCode" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your Postal code" />
+                <input asp-for="Input.PostalCode" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your Postal code"
+                       placeholder="Enter Your Phone Number"
+                       inputmode="numeric"
+                       maxlength="6"
+                       oninput="this.value = this.value.replace(/[^0-5]/g, '')" />
                 <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
