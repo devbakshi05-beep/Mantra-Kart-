@@ -1,58 +1,51 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using brevo_csharp.Api;
-using brevo_csharp.Client;
-using brevo_csharp.Model;
 using System;
-using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
 
 namespace Ecom_Project_2026.Utility
 {
     public class EmailSender : IEmailSender
     {
         private readonly EmailSettings _emailSettings;
+        private static readonly HttpClient _httpClient = new HttpClient
+        {
+            Timeout = TimeSpan.FromSeconds(20)   // 20 second se zyada wait nahi karega
+        };
 
         public EmailSender(IOptions<EmailSettings> emailSettings)
         {
             _emailSettings = emailSettings.Value;
         }
 
-        public async System.Threading.Tasks.Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            try
+            System.Diagnostics.Debug.WriteLine("DEBUG >> SendEmailAsync STARTED");
+            string toEmail = string.IsNullOrEmpty(email) ? _emailSettings.FromEmail : email;
+
+            var payload = new
             {
-                string toEmail = string.IsNullOrEmpty(email) ? _emailSettings.FromEmail : email;
+                sender = new { name = "Shopping App", email = _emailSettings.FromEmail },
+                to = new[] { new { email = toEmail } },
+                subject = "Shopping App : " + subject,
+                htmlContent = htmlMessage
+            };
 
-                brevo_csharp.Client.Configuration.Default.ApiKey.Add("api-key", _emailSettings.BrevoApiKey);
+            var json = JsonSerializer.Serialize(payload);
 
-                var apiInstance = new TransactionalEmailsApi();
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.brevo.com/v3/smtp/email");
+            request.Headers.Add("api-key", _emailSettings.BrevoApiKey);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var sender = new SendSmtpEmailSender("Shopping App", _emailSettings.FromEmail);
+            var response = await _httpClient.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
 
-                var toList = new List<SendSmtpEmailTo>
-                {
-                    new SendSmtpEmailTo(toEmail)
-                };
-
-                if (!string.IsNullOrEmpty(_emailSettings.CcEmail))
-                {
-                    // Brevo mein CC ke liye "cc" parameter alag se pass hota hai
-                }
-
-                var sendSmtpEmail = new SendSmtpEmail(
-                    sender: sender,
-                    to: toList,
-                    subject: "Shopping App : " + subject,
-                    htmlContent: htmlMessage
-                );
-
-                await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
-            }
-            catch (Exception ex)
+            if (!response.IsSuccessStatusCode)
             {
-                throw;
+                throw new Exception($"Brevo email failed: {response.StatusCode} - {responseBody}");
             }
         }
     }
